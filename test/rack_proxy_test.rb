@@ -4,7 +4,7 @@ require "rack/proxy"
 class RackProxyTest < Test::Unit::TestCase
   class TrixProxy < Rack::Proxy
     def rewrite_env(env)
-      env["HTTP_HOST"] = "trix.pl"
+      env["HTTP_HOST"] = "www.trix.pl"
       env
     end
   end
@@ -41,5 +41,11 @@ class RackProxyTest < Test::Unit::TestCase
     assert headers.key?('ACCEPT')
     assert !headers.key?('CONNECTION')
     assert !headers.key?('NOT-HTTP-HEADER')
+  end
+
+  def test_handles_missing_content_length
+    assert_nothing_thrown do
+      post "/", nil, "CONTENT_LENGTH" => nil
+    end
   end
 end

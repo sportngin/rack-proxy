@@ -17,8 +17,10 @@ module Rack
     def headers
       h = Utils::HeaderHash.new
       
-      response.each_header do |k, v|
-        h[k] = v
+      response.each_key do |k|
+        values = response.get_fields(k)
+        values = values.first if values.length == 1
+        h[k] = values
       end
       
       h
